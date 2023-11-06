@@ -7,7 +7,20 @@ def display_csv_info():
     file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
     
     if file_path:
-        df = pd.read_csv(file_path)
+        # df = pd.read_csv(file_path)
+
+        df = pd.read_csv(file_path, header=None)  # Read without header
+        num_columns = df.shape[1]  # Get the number of columns
+
+        # specific names for columns to prevent "unmatched:" phrase
+        column_names = [f"Column{i+1}" for i in range(num_columns)]
+        df.columns = column_names  # Assign column names to the DataFrame
+
+
+
+        # sub empty cells
+        df.fillna('', inplace=True)
+
         
         # Create a new Tkinter window
         window = tk.Tk()
@@ -18,7 +31,9 @@ def display_csv_info():
         text_widget.pack()
 
         # Insert the CSV contents into the text widget
-        text_widget.insert(tk.INSERT, df.to_string())
+        # text_widget.insert(tk.INSERT, df.to_string())
+        text_widget.insert(tk.INSERT, df.to_string(index=False))  # Omit the index column
+
 
         # Start the Tkinter main loop
         window.mainloop()
